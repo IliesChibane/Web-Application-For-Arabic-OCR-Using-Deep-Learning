@@ -1,4 +1,6 @@
 import arabic_reshaper
+import numpy as np
+import cv2
 
 def return_word(index):
     word = ""
@@ -60,3 +62,45 @@ def return_word(index):
         word = "يكون"
     return arabic_reshaper.reshape(word)[::-1]
 
+def histo_v(im):
+    w = im.shape[1]
+    hist_v = np.zeros((w),np.uint16)
+    for i in range(w):
+        hist_v[i] = np.count_nonzero(im[:,i])
+    return hist_v
+
+def segmentation(img):
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    bw = cv2.threshold(img,0,255, cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)[1]
+
+    hist_v = histo_v(bw)
+
+    im_hist_v = np.zeros(img.shape,np.uint8)
+    im_hist_v[:,:] = 255
+
+    h, w = img.shape
+    for i in range(0,w):
+        im_hist_v[0:hist_v[i],i] = 0
+
+    for i in range(w):
+        if hist_v[i] > 20:
+            break
+
+    j = 0
+    chars = []
+    while j != i:
+        for j in range(i,w):
+            if hist_v[j] < 15:
+                break
+        
+        if i != j:
+            im = np.zeros((h,j-i),np.uint8)
+            im = img[:, i:j]
+
+            for i in range(j, w):
+                if hist_v[i] > 15:
+                    break
+            chars.append(im)
+
+    return chars.reverse()
