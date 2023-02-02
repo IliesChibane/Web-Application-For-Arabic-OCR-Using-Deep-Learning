@@ -4,7 +4,9 @@
 
 #### Requirements
 
-- Python 3.7
+- Python 3.8
+
+- CUDA 11.7
 
 - anaconda-navigator 
 
@@ -13,7 +15,7 @@
     Create an annaconda environement and use this command to install all the neccesary librairies
 
 ```bash
-conda install -c conda-forge numpy pandas matplotlib seaborn scikit-learn opencv jupyter flask tensorflow pytorch torchvision torchaudio cudatoolkit=/%Your CUDA version%/ -c pytorch
+pip install numpy pandas matplotlib seaborn scikit-learn opencv jupyter flask tensorflow torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu117
 ```
 
 After this all you need to do is start coding using your code editor of your choice
